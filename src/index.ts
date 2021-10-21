@@ -1,4 +1,4 @@
-import logger from './logger';
+import logger from './lib/logger';
 import app from './app';
 
 const port = app.get('port');
@@ -9,5 +9,5 @@ process.on('unhandledRejection', (reason, p) =>
 );
 
 server.on('listening', () =>
-  logger.info('Feathers application started on http://%s:%d', app.get('host'), port)
+  logger.info('application started on http://%s:%d', app.get('host'), port)
 );

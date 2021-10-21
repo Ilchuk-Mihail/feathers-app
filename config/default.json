@@ -28,5 +28,5 @@
       "passwordField": "password"
     }
   },
-  "postgres": "postgres://postgres:@localhost:5432/feathers_test"
+  "postgres": "postgres://postgres:postgres@localhost:5432/feathers_test"
 }

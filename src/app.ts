@@ -11,14 +11,14 @@ import socketio from '@feathersjs/socketio';
 
 
 import { Application } from './declarations';
-import logger from './logger';
+import logger from './lib/logger';
 import middleware from './middleware';
 import services from './services';
 import appHooks from './app.hooks';
 import channels from './channels';
 import { HookContext as FeathersHookContext } from '@feathersjs/feathers';
 import authentication from './authentication';
-import sequelize from './sequelize';
+import sequelize from './lib/sequelize';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());

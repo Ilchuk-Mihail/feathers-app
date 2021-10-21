@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { Application } from './declarations';
+import { Application } from '../declarations';
 
 export default function (app: Application): void {
   const connectionString = app.get('postgres');

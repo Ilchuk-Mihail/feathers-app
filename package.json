@@ -15,7 +15,7 @@
   "contributors": [],
   "bugs": {},
   "directories": {
-    "lib": "src",
+    "dist": "src",
     "test": "test/",
     "config": "config/"
   },
@@ -27,9 +27,9 @@
     "test": "npm run lint && npm run compile && npm run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify src/",
-    "start": "npm run compile && node lib/",
+    "start": "npm run compile && node dist/",
     "mocha": "ts-mocha \"test/**/*.ts\" --recursive --exit",
-    "compile": "shx rm -rf lib/ && tsc"
+    "compile": "shx rm -rf dist/ && tsc"
   },
   "standard": {
     "env": [
@@ -37,7 +37,7 @@
     ],
     "ignore": []
   },
-  "types": "lib/",
+  "types": "dist/",
   "dependencies": {
     "@feathersjs/authentication": "^4.5.11",
     "@feathersjs/authentication-local": "^4.5.11",
