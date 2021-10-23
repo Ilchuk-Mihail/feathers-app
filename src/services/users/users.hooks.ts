@@ -1,19 +1,46 @@
 import * as feathersAuthentication from '@feathersjs/authentication';
 import * as local from '@feathersjs/authentication-local';
-// Don't remove this comment. It's needed to format import lines nicely.
+import { HookContext } from '@feathersjs/feathers';
+import { Forbidden } from '@feathersjs/errors';
+import { disallow } from 'feathers-hooks-common';
+import validate from 'feathers-validate-joi';
+import { signUpSchema } from './users.validations';
 
 const { authenticate } = feathersAuthentication.hooks;
 const { hashPassword, protect } = local.hooks;
 
+function isCurrent (context: HookContext): HookContext {
+  if (context.params.provider && context.params.user?.id !== context.id) {
+    // try to access not own user data
+    throw new Forbidden('access denied');
+  }
+
+  return context;
+}
+
 export default {
   before: {
     all: [],
-    find: [ authenticate('jwt') ],
-    get: [ authenticate('jwt') ],
-    create: [ hashPassword('password') ],
-    update: [ hashPassword('password'),  authenticate('jwt') ],
-    patch: [ hashPassword('password'),  authenticate('jwt') ],
-    remove: [ authenticate('jwt') ]
+    find: [
+      authenticate('jwt'),
+    ],
+    get: [
+      authenticate('jwt'),
+      isCurrent,
+    ],
+    create: [
+      validate.form(signUpSchema, {}),
+      hashPassword('password')
+    ],
+    update: [
+      hashPassword('password'),
+      authenticate('jwt')
+    ],
+    patch: [
+      hashPassword('password'),
+      authenticate('jwt')
+    ],
+    remove: disallow()
   },
 
   after: {

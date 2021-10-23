@@ -1,5 +1,25 @@
-// Application hooks that run for every service
-// Don't remove this comment. It's needed to format import lines nicely.
+import { HookContext } from '@feathersjs/feathers';
+import { GeneralError } from '@feathersjs/errors';
+
+const errorHandler = (context: HookContext): HookContext => {
+  const error = context.error;
+ 
+  if (!error.code) {
+    const newError = new GeneralError('internal server error');
+    context.error = newError;
+    return context;
+  }
+
+  if (error.code === 404 || process.env.NODE_ENV === 'production') {
+    error.stack = null;
+  }
+
+  // custom error interface ? 
+  // error.className = undefined;
+  // error.data = undefined;
+
+  return context;
+};
 
 export default {
   before: {
@@ -23,7 +43,9 @@ export default {
   },
 
   error: {
-    all: [],
+    all: [
+      errorHandler
+    ],
     find: [],
     get: [],
     create: [],
