@@ -1,7 +1,7 @@
 import * as feathersAuthentication from '@feathersjs/authentication';
 import * as local from '@feathersjs/authentication-local';
 import { HookContext } from '@feathersjs/feathers';
-import { Forbidden } from '@feathersjs/errors';
+import { Forbidden, Conflict } from '@feathersjs/errors';
 import { disallow } from 'feathers-hooks-common';
 import validate from 'feathers-validate-joi';
 import { signUpSchema } from './users.validations';
@@ -9,10 +9,31 @@ import { signUpSchema } from './users.validations';
 const { authenticate } = feathersAuthentication.hooks;
 const { hashPassword, protect } = local.hooks;
 
+const joiOptions = {
+  abortEarly: false,
+  convert: true,
+  allowUnknown: false,
+  stripUnknown: true
+};
+
 function isCurrent (context: HookContext): HookContext {
   if (context.params.provider && context.params.user?.id !== context.id) {
     // try to access not own user data
     throw new Forbidden('access denied');
+  }
+
+  return context;
+}
+
+async function checkIfUserExists (context: HookContext): Promise<HookContext> {
+  const result = await context.service.find({
+    query: {
+      email: context.data.email
+    }
+  });
+
+  if (result.data.length) {
+    throw new Conflict('email already exists');
   }
 
   return context;
@@ -29,7 +50,8 @@ export default {
       isCurrent,
     ],
     create: [
-      validate.form(signUpSchema, {}),
+      validate.form(signUpSchema, joiOptions),
+      checkIfUserExists,
       hashPassword('password')
     ],
     update: [
@@ -40,7 +62,7 @@ export default {
       hashPassword('password'),
       authenticate('jwt')
     ],
-    remove: disallow()
+    remove: []
   },
 
   after: {

@@ -1,6 +1,5 @@
 import Joi from 'joi';
 
-
 export const signUpSchema = Joi.object({
   password: Joi
     .string()
