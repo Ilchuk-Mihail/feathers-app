@@ -5,6 +5,7 @@ import { Forbidden, Conflict } from '@feathersjs/errors';
 import { disallow } from 'feathers-hooks-common';
 import validate from 'feathers-validate-joi';
 import { signUpSchema } from './users.validations';
+import { iff, isProvider } from 'feathers-hooks-common';
 
 const { authenticate } = feathersAuthentication.hooks;
 const { hashPassword, protect } = local.hooks;
@@ -17,7 +18,7 @@ const joiOptions = {
 };
 
 function isCurrent (context: HookContext): HookContext {
-  if (context.params.provider && context.params.user?.id !== context.id) {
+  if (context.params.user?.id !== context.id) {
     // try to access not own user data
     throw new Forbidden('access denied');
   }
@@ -47,7 +48,7 @@ export default {
     ],
     get: [
       authenticate('jwt'),
-      isCurrent,
+      iff(isProvider('external'), isCurrent)
     ],
     create: [
       validate.form(signUpSchema, joiOptions),
@@ -62,7 +63,7 @@ export default {
       hashPassword('password'),
       authenticate('jwt')
     ],
-    remove: []
+    remove: disallow('external')
   },
 
   after: {
