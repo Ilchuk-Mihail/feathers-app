@@ -15,7 +15,7 @@
   "contributors": [],
   "bugs": {},
   "directories": {
-    "dist": "src",
+    "lib": "src",
     "test": "test/",
     "config": "config/"
   },
@@ -24,9 +24,9 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "compile": "shx rm -rf dist/ && tsc",
+    "compile": "shx rm -rf lib/ && tsc",
     "dev": "ts-node-dev --no-notify src/",
-    "start": "npm run compile && node dist/",
+    "start": "npm run compile && node lib/",
     "test": "NODE_ENV=test ts-mocha \"test/**/*.ts\" --recursive --exit",
     "coverage": "nyc npm run test",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix"
@@ -37,7 +37,7 @@
     ],
     "ignore": []
   },
-  "types": "dist/",
+  "types": "lib/",
   "dependencies": {
     "@feathersjs/authentication": "^4.5.11",
     "@feathersjs/authentication-local": "^4.5.11",
@@ -56,6 +56,7 @@
     "joi": "^17.4.2",
     "pg": "^8.7.1",
     "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0",
     "serve-favicon": "^2.5.0",
     "winston": "^3.3.3"
   },
