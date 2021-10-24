@@ -1,4 +1,4 @@
-import assert from 'assert';
+import { expect } from 'chai';
 import app from '../../src/app';
 
 describe('\'users\' service', () => {
@@ -16,7 +16,7 @@ describe('\'users\' service', () => {
   it('registered the service', () => {
     service = app.service('users');
 
-    assert.ok(service, 'Registered the service');
+    expect(service).to.not.be.null;
   });
 
   it('creates a user and encrypts password', async () => {
@@ -25,7 +25,19 @@ describe('\'users\' service', () => {
       password: 'secret'
     });
 
-    // Makes sure the password got encrypted
-    assert.ok(user.password !== 'secret');
+    expect(user.password).not.to.equal('secret');
+  });
+
+  it('fail with error a user already exists', async () => {
+    try {
+      await service.create({
+        email: testEmail,
+        password: 'secret'
+      });
+      expect.fail('call should have failed');
+    } catch (err: any) {
+      expect(err.message).to.equal('email already exists');
+      expect(err.code).to.equal(409);
+    }
   });
 });
