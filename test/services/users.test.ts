@@ -5,13 +5,13 @@ describe('\'users\' service', () => {
   const testEmail = 'test2@email.com';
   let service;
 
-  after(async function () {
-    const user = await service.find({
-      query: { email: testEmail }
-    });
+  // after(async function () {
+  //   const user = await service.find({
+  //     query: { email: testEmail }
+  //   });
 
-    await service.remove(user.data[0].id);
-  });
+  //   await service.remove(user.data[0].id);
+  // });
 
   it('registered the service', () => {
     service = app.service('users');

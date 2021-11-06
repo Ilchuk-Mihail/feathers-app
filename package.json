@@ -27,7 +27,7 @@
     "compile": "shx rm -rf lib/ && tsc",
     "dev": "ts-node-dev --no-notify src/",
     "start": "npm run compile && node lib/",
-    "test": "NODE_ENV=test ts-mocha \"test/**/*.ts\" --recursive --exit",
+    "test": "NODE_ENV=test ts-mocha \"test/**/*.ts\"",
     "coverage": "nyc npm run test",
     "lint": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix"
   },
